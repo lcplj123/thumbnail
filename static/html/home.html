@@ -1,0 +1,232 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>网络高清缩略图抓取demo</title>
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <!-- No Baidu Siteapp-->
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" href="image/favicon.png">
+
+    <link rel="stylesheet" href="/static/js/libs/AmazeUi/css/amazeui.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/js/libs/fancybox/jquery.fancybox.css?v=2.1.5" media="screen" />
+    <style>
+
+    @media only screen and (min-width: 641px) {
+        .search-input {
+            min-width: 260px;
+        }
+        #xiuxiu-fancybox{
+            width: 600px;
+            height: 540px;
+            display: none;
+        }
+    }
+
+    @media only screen and (min-width: 1200px) {
+        .search-input {
+            min-width: 300px;
+        }
+        #xiuxiu-fancybox{
+            width: 1000px;
+            height: 660px;
+            display: none;
+        }
+    }
+    .fancybox-overlay{
+        z-index: 1000;
+    }
+    .am-popover{
+        z-index: 9999;
+    }
+
+    
+    </style>
+</head>
+<body>
+    <header class="am-topbar">
+        <h1 class="am-topbar-brand">
+            <i class="am-icon-btn am-icon-search"></i><a href="#">高清缩略图抓取</a>
+        </h1>
+        <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only"
+              data-am-collapse="{target: '#doc-topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span
+          class="am-icon-bars"></span></button>
+        <div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse">
+            <form class="am-topbar-form am-topbar-right am-form-inline" action="/s" method="get" role="search">
+                
+                <div class="am-form-group ">
+                    <div class="am-input-group">
+                        <span class="am-input-group-btn">
+                            <select name="from" data-am-selected = "{btnWidth:'100%'}">
+                                <option  value="baidu">百度</option>
+                                <option  value="sougou">搜狗</option>
+								<option  value="qihu">360</option>
+                            </select>
+                        </span>
+                        <input type="text" name="key" value="{{.Keyword}}" class="am-form-field am-input-sm search-input">
+                    </div>
+                    <!--
+                    <i class="am-icon-search"></i>
+                    <input type="text" name="key"  class="am-form-field am-input-sm search-input" value="{{.Keyword}}" placeholder="请输入关键词">
+					-->
+                </div>
+                <button type="submit" class="am-btn am-btn-default am-btn-sm">搜索</button>
+            </form>
+        </div>  
+    </header>
+    <div class="am-g am-g-fixed" >
+        <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-thumbnails" id="image-list">
+		{{range .Items}}
+			<li><a class="fancybox" href="#xiuxiuEditor"><img class="am-thumbnail" bigPic="{{.Img}}" src="{{.Thumbnail}}" from="{{.From}}" desc="{{.Desc}}"  /></a></li>
+		{{end}}
+        </ul>
+
+        <div class="am-modal am-modal-no-btn" tabindex="-1" id="modal-success">
+            
+            <div class="am-modal-dialog">
+                <div class="am-modal-hd">上传成功
+                    <a href="javascript: void(0)" class="am-close am-close-spin" data-am-modal-close>&times;</a>
+                </div>
+                <div class="am-modal-bd">
+                    <div class="am-input-group" >
+                        <input type="text" class="am-form-field" id="modal-success-input">
+                        <span class="am-input-group-btn">
+                            <!--
+                            <button class="am-btn am-btn-default" id="copy-btn" type="button">点击复制</button>
+                        -->
+                            <span  id="forLoadSwf"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        
+            
+        </div>
+        
+        <div class="am-modal am-modal-alert" tabindex="-1" id="modal-fail">
+            <div class="am-modal-dialog">
+                <div class="am-modal-hd">上传失败</div>
+                <div class="am-modal-bd" id="error-msg">
+                    ...
+                </div>
+                <div class="am-modal-footer">
+                    <span class="am-modal-btn">确定</span>
+                </div>
+            </div>
+
+      
+        </div>
+
+
+    </div>
+
+    <div id="xiuxiu-fancybox">
+    </div>
+
+    
+
+<!--[if lt IE 9]>
+<script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+<script src="/static/js/libs/AmazeUi/js/polyfill/rem.min.js"></script>
+<script src="/static/js/libs/AmazeUi/js/polyfill/respond.min.js"></script>
+<script src="/static/js/libs/AmazeUi/js/amazeui.legacy.js"></script>
+<![endif]-->
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="/static/js/libs/AmazeUi/js/jquery.min.js"></script>
+<script src="/static/js/libs/AmazeUi/js/amazeui.min.js"></script>
+<!--<![endif]-->
+<script src="http://open.web.meitu.com/sources/xiuxiu.js" type="text/javascript"></script>
+<!-- Add fancyBox main JS and CSS files -->
+<script type="text/javascript" src="/static/js/libs/fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
+<script src="http://libs.baidu.com/swfobject/2.2/swfobject.js" type="text/javascript"></script>
+
+
+<script type="text/javascript">
+(function($) {
+
+    $("#image-list img").on("click", function(){
+        var imgSrc = $(this).attr("bigPic");
+        var _w = $('#xiuxiu-fancybox').width();
+        var _h = $('#xiuxiu-fancybox').height();
+        xiuxiu.params.wmode = "transparent";
+        xiuxiu.setLaunchVars("customMenu", [{"decorate":["basicEdit"]}]);
+        xiuxiu.setLaunchVars ("nav", "decorate/basicEdit");
+        xiuxiu.setLaunchVars("cropPresets", ["700x330", "640x480", "380x220", 
+            "369x206", "345x195", "225x128", "165x95", "173x98", "103x77",
+            "161x102", "80x60", "180x100", "209x85", "176x99", "179x100",
+            "368x231", "164x93"
+            ]);
+        xiuxiu.setLaunchVars("quality", 100);
+        //xiuxiu.setLaunchVars("uploadBtnLabel", '11111');
+        /*第1个参数是加载编辑器div容器，第2个参数是编辑器类型，第3个参数是div容器宽，第4个参数是div容器高*/
+        xiuxiu.embedSWF("xiuxiu-fancybox", 3, _w, _h);
+           
+        
+        xiuxiu.onInit = function ()
+        {
+            xiuxiu.loadPhoto(imgSrc);
+            //修改为您自己的图片上传接口
+            //xiuxiu.setUploadURL("http://localhost/pic_fetch_web/upload.php");
+            xiuxiu.setUploadURL("http://cms.ku6.com/plugin/upload/uploadpic_api.jsp");
+            xiuxiu.setUploadType(2);
+            xiuxiu.setUploadDataFieldName("userfile");
+            
+        }   
+        xiuxiu.onUploadResponse = function (data)
+        {
+            //$.fancybox.close();
+            var data = $.parseJSON(data);
+            console.log(data);
+            if(data.status == 1){
+                var $modal = $('#modal-success');
+                $modal.modal();
+                $("#modal-success-input").val(data.data);
+                
+                var flashvars = {
+                    content: encodeURIComponent(data.data),
+                    uri: '/static/pic/flash_copy_btn.png'
+                };
+                var params = {
+                    wmode: "transparent",
+                    allowScriptAccess: "always"
+                };
+                swfobject.embedSWF("/clipboard.swf", "forLoadSwf", "90", "42", "9.0.0", null, flashvars, params);
+               
+            }else{
+                var $modal = $('#modal-fail');
+                $modal.modal();
+                $("#error-msg").html(data.data);
+            }
+            
+        }
+        xiuxiu.onDebug = function (data)
+        {
+            alert("错误响应" + data);
+        }
+        xiuxiu.onClose = function (id)
+        {
+            //alert(id + "关闭");
+            
+        }
+        
+    });
+    $(".fancybox").fancybox();
+
+})(jQuery);
+
+function copySuccess(){
+    //flash回调
+    alert("复制成功！");
+}
+
+</script>
+
+</body>
+</html>
