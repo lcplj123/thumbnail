@@ -220,6 +220,9 @@
     $(".fancybox").fancybox();
 	
 	var _from = {{.From}};
+	if $_from == "" {
+		return
+	}
 	var $from_option = $('#search_from option');
 	//console.log($from_option);
 	$from_option.each(function(){
