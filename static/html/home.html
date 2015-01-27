@@ -82,7 +82,7 @@
     <div class="am-g am-g-fixed" >
         <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-thumbnails" id="image-list">
 		{{range .Items}}
-			<li><a class="fancybox" href="#xiuxiuEditor"><img class="am-thumbnail" bigPic="{{.Img}}" src="{{.Thumbnail}}" from="{{.From}}" desc="{{.Desc}}"  /></a></li>
+			<li><a class="fancybox" href="#xiuxiuEditor"><img class="am-thumbnail" bigPic="{{.Img}}" src="{{.Thumbnail}}" from="{{.From}}" desc="{{.Desc}}" width="{{.Width}}" height="{{.Height}}" /></a></li>
 		{{end}}
         </ul>
 
@@ -220,17 +220,17 @@
     $(".fancybox").fancybox();
 	
 	var _from = {{.From}};
-	if $_from == "" {
-		return
-	}
 	var $from_option = $('#search_from option');
 	//console.log($from_option);
-	$from_option.each(function(){
-		$(this).removeAttr('selected');
-		if($(this).val() == _from){
-			$(this).attr('selected','selected');
-		}
-	});
+	if (_from != ""){
+		$from_option.each(function(){
+			$(this).removeAttr('selected');
+			if($(this).val() == _from){
+				$(this).attr('selected','selected');
+			}
+		});
+	}
+	
 	
 
 })(jQuery);

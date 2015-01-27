@@ -3,6 +3,7 @@ package fetch
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/axgle/mahonia"
@@ -37,8 +38,8 @@ type Item struct {
 	Img       string
 	Desc      string
 	From      string
-	//Width     int
-	//Height    int
+	Width     string
+	Height    string
 }
 
 func init() {
@@ -147,8 +148,8 @@ func RealDownload(url string, ch chan bool, from string) {
 	fname := IMAGE_DIR + GetMd5String(filepath.Base(url)) + filepath.Ext(url)
 	ioutil.WriteFile(fname, data, 0755)
 }
-func ParseBaiduResponse(ItemList *[]*Item, json *simplejson.Json) {
-	jdata, _ := json.Get("data").Array()
+func ParseBaiduResponse(ItemList *[]*Item, jsons *simplejson.Json) {
+	jdata, _ := jsons.Get("data").Array()
 	for _, value := range jdata {
 		val := value.(map[string]interface{})
 		if len(val) == 0 {
@@ -160,8 +161,8 @@ func ParseBaiduResponse(ItemList *[]*Item, json *simplejson.Json) {
 		item.Img = val["objURL"].(string)
 		item.Thumbnail = val["thumbURL"].(string)
 		//fmt.Println(item.Img)
-		//item.Width = val["width"].(Int)
-		//item.Height = val["height"].(Int)
+		item.Width = val["width"].(json.Number).String()
+		item.Height = val["height"].(json.Number).String()
 		*ItemList = append(*ItemList, item)
 	}
 }
@@ -194,8 +195,8 @@ func FetchFromQihu(key string) (*[]*Item, error) {
 	return &ItemList, nil
 }
 
-func ParseQihuResponse(ItemList *[]*Item, json *simplejson.Json) {
-	jdata, _ := json.Get("list").Array()
+func ParseQihuResponse(ItemList *[]*Item, jsons *simplejson.Json) {
+	jdata, _ := jsons.Get("list").Array()
 	for _, value := range jdata {
 		val := value.(map[string]interface{})
 		if len(val) == 0 {
@@ -206,6 +207,8 @@ func ParseQihuResponse(ItemList *[]*Item, json *simplejson.Json) {
 		item.From = val["dspurl"].(string)
 		item.Thumbnail = val["thumb"].(string)
 		item.Img = val["img"].(string)
+		item.Width = val["width"].(string)
+		item.Height = val["height"].(string)
 		*ItemList = append(*ItemList, item)
 	}
 }
@@ -236,8 +239,8 @@ func FetchFromSougou(key string) (*[]*Item, error) {
 	DownloadImage(&ItemList, "sougou")
 	return &ItemList, nil
 }
-func ParseSougouResponse(ItemList *[]*Item, json *simplejson.Json) {
-	jdata, _ := json.Get("items").Array()
+func ParseSougouResponse(ItemList *[]*Item, jsons *simplejson.Json) {
+	jdata, _ := jsons.Get("items").Array()
 	for _, value := range jdata {
 		val := value.(map[string]interface{})
 		if len(val) == 0 {
@@ -248,6 +251,8 @@ func ParseSougouResponse(ItemList *[]*Item, json *simplejson.Json) {
 		//item.From = val[""]
 		item.Thumbnail = val["thumbUrl"].(string)
 		item.Img = val["pic_url_noredirect"].(string)
+		item.Height = val["width"].(string)
+		item.Width = val["height"].(string)
 		*ItemList = append(*ItemList, item)
 	}
 }
