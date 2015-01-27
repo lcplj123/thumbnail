@@ -62,8 +62,8 @@
                 <div class="am-form-group ">
                     <div class="am-input-group">
                         <span class="am-input-group-btn">
-                            <select name="from" data-am-selected = "{btnWidth:'100%'}">
-                                <option  value="baidu">百度</option>
+                            <select id="search_from" name="from" data-am-selected = "{btnWidth:'100%'}" minchecked="1" maxchecked="1">
+                                <option selected value="baidu">百度</option>
                                 <option  value="sougou">搜狗</option>
 								<option  value="qihu">360</option>
                             </select>
@@ -218,8 +218,21 @@
         
     });
     $(".fancybox").fancybox();
+	
+	var _from = {{.From}};
+	var $from_option = $('#search_from option');
+	//console.log($from_option);
+	$from_option.each(function(){
+		$(this).removeAttr('selected');
+		if($(this).val() == _from){
+			$(this).attr('selected','selected');
+		}
+	});
+	
 
 })(jQuery);
+
+
 
 function copySuccess(){
     //flash回调
