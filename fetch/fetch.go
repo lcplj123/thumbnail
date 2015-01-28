@@ -76,7 +76,7 @@ func Fetch(key string, from string) (*[]*Item, error) {
 }
 
 func FetchFromBaidu(key string) (*[]*Item, error) {
-	ukey := EncodeKey(key)
+	ukey := UTF8ToGBK(key)
 	surl := GetBaiduUrl(ukey)
 	ItemList := make([]*Item, 0, BAIDU_PAGENUM*60+1)
 
@@ -157,6 +157,7 @@ func ParseBaiduResponse(ItemList *[]*Item, jsons *simplejson.Json) {
 		}
 		item := new(Item)
 		item.Desc = val["fromPageTitleEnc"].(string)
+		//fmt.Println(item.Desc)
 		item.From = val["fromURLHost"].(string)
 		item.Img = val["objURL"].(string)
 		item.Thumbnail = val["thumbURL"].(string)
@@ -168,7 +169,7 @@ func ParseBaiduResponse(ItemList *[]*Item, jsons *simplejson.Json) {
 }
 
 func FetchFromQihu(key string) (*[]*Item, error) {
-	ukey := EncodeKey(key)
+	ukey := UTF8ToGBK(key)
 	surl := GetQihuUrl(ukey)
 	ItemList := make([]*Item, 0, QIHU_PAGENUM*30+1)
 	for _, url := range surl {
@@ -203,7 +204,9 @@ func ParseQihuResponse(ItemList *[]*Item, jsons *simplejson.Json) {
 			break
 		}
 		item := new(Item)
+
 		item.Desc = val["title"].(string)
+		//fmt.Println(item.Desc)
 		item.From = val["dspurl"].(string)
 		item.Thumbnail = val["thumb"].(string)
 		item.Img = val["img"].(string)
@@ -213,7 +216,7 @@ func ParseQihuResponse(ItemList *[]*Item, jsons *simplejson.Json) {
 	}
 }
 func FetchFromSougou(key string) (*[]*Item, error) {
-	ukey := EncodeKey(key)
+	ukey := UTF8ToGBK(key)
 	surl := GetSougouUrl(ukey)
 	ItemList := make([]*Item, 0, SOUGOU_PAGENUM*48+1)
 	for _, url := range surl {
@@ -248,7 +251,7 @@ func ParseSougouResponse(ItemList *[]*Item, jsons *simplejson.Json) {
 		}
 		item := new(Item)
 		item.Desc = val["title"].(string)
-		//item.From = val[""]
+		//fmt.Println(item.Desc)
 		item.Thumbnail = val["thumbUrl"].(string)
 		item.Img = val["pic_url_noredirect"].(string)
 		item.Height = val["width"].(string)
@@ -331,10 +334,19 @@ func GetRefererString(from string) string {
 		return `http://baidu.com`
 	}
 }
-func EncodeKey(key string) string {
+
+//utf8 转gbk
+func UTF8ToGBK(key string) string {
 	enc := mahonia.NewEncoder("gb18030")
 	r := enc.ConvertString(key)
 	return url.QueryEscape(r)
+}
+
+//gbk转utf8
+func GBKToUTF8(s string) string {
+	enc := mahonia.NewEncoder("utf-8")
+	r := enc.ConvertString(s)
+	return r
 }
 
 //重定向

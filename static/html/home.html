@@ -44,7 +44,34 @@
     .am-popover{
         z-index: 9999;
     }
+	
+	#image-list .bg {
+        display: inline-block;
+        background: black;
+        opacity: 0.5;
+        filter:alpha(opacity=50);
+        width: 96%;
+        height: 25px;
+        position: absolute;
+        bottom: 3rem;
+        left: 2%;
+        z-index: 1;
 
+    }
+    #image-list .bg-content {
+        display: inline-block;
+        width: 96%;
+        height: 25px;
+        position: absolute;
+        bottom: 3rem;
+        left: 2%;
+        z-index: 10;
+    }
+    #image-list .bg-content p {
+        padding: 0px 5px;
+        color: white;
+    }
+  
     
     </style>
 </head>
@@ -82,7 +109,15 @@
     <div class="am-g am-g-fixed" >
         <ul class="am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-thumbnails" id="image-list">
 		{{range .Items}}
-			<li><a class="fancybox" href="#xiuxiuEditor"><img class="am-thumbnail" bigPic="{{.Img}}" src="{{.Thumbnail}}" from="{{.From}}" desc="{{.Desc}}" width="{{.Width}}" height="{{.Height}}" /></a></li>
+			<li style="position: relative;">
+				<a class="fancybox" href="#xiuxiuEditor">
+					<img class="am-thumbnail" bigPic="{{.Img}}" src="{{.Thumbnail}}" from="{{.From}}" desc="{{.Desc}}" width="{{.Width}}" height="{{.Height}}" />
+				</a>
+				<div class="bg">  </div>
+                <div class="bg-content">
+                    <p>{{.Width}}x{{.Height}}</p>
+                </div>
+			</li>
 		{{end}}
         </ul>
 
@@ -158,10 +193,9 @@
         xiuxiu.params.wmode = "transparent";
         xiuxiu.setLaunchVars("customMenu", [{"decorate":["basicEdit"]}]);
         xiuxiu.setLaunchVars ("nav", "decorate/basicEdit");
-        xiuxiu.setLaunchVars("cropPresets", ["700x330", "640x480", "380x220", 
-            "369x206", "345x195", "225x128", "165x95", "173x98", "103x77",
-            "161x102", "80x60", "180x100", "209x85", "176x99", "179x100",
-            "368x231", "164x93"
+        xiuxiu.setLaunchVars("cropPresets", ["80x60", "103x77","161x102","164x93", "165x95","173x98","176x99","179x100","180x100", 
+			"209x85",  "225x128", "345x195","368x231", 
+            "369x206","380x220", "640x480","700x330"
             ]);
         xiuxiu.setLaunchVars("quality", 100);
         //xiuxiu.setLaunchVars("uploadBtnLabel", '11111');
