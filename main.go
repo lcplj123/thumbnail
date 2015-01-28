@@ -89,7 +89,7 @@ func searchPage(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("searchPage error", err)
 		}
 
-		time.Sleep(2 * time.Second)
+		time.Sleep(1 * time.Second)
 		dataMap := make(map[string]interface{})
 		dataMap["Keyword"] = key
 		dataMap["Items"] = *ItemList
