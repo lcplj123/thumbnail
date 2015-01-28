@@ -102,6 +102,10 @@ func searchPage(w http.ResponseWriter, r *http.Request) {
 func viewPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		imgid := r.FormValue("imgID")
+		if imgid == "" {
+			http.NotFound(w, r)
+			return
+		}
 		imgpath := fetch.IMAGE_DIR + imgid
 		if exist := isExists(imgpath); !exist {
 			http.NotFound(w, r)
